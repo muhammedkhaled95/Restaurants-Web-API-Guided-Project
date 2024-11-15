@@ -1,0 +1,30 @@
+@Restaurants.API_HostAddress = https://localhost:7186
+
+GET {{Restaurants.API_HostAddress}}/weatherforecast/currentDay
+
+###
+
+GET {{Restaurants.API_HostAddress}}/getSome
+
+###
+
+GET {{Restaurants.API_HostAddress}}/weatherforecast/4/getAll?max=2
+
+###
+
+POST {{Restaurants.API_HostAddress}}/weatherforecast/welcome
+Content-Type: application/json
+
+"Mohamed"
+
+###
+
+POST {{Restaurants.API_HostAddress}}/generate?numOfResults=3
+Content-Type: application/json
+
+{
+  "Min": 20,
+  "Max": 45
+}
+
+###
