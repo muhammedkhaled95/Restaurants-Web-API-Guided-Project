@@ -12,8 +12,5 @@
         public Address? Address { get; set; }
         public List<Dish> dishes { get; set; } = new List<Dish>();
 
-
-
-
     }
 }

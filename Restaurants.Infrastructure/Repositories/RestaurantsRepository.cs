@@ -15,8 +15,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext) : IRestaura
 
     public async Task<Restaurant?> GetByIdAsync(int id)
     {
-        //You can use this as well -> await dbContext.Restaurants.FirstOrDefaultAsync(x => x.Id == id);
-        var restaurant = await dbContext.Restaurants.FindAsync(id);
+        var restaurant = await dbContext.Restaurants.Include(restaurant => restaurant.dishes).FirstOrDefaultAsync(x => x.Id == id);
         return restaurant;
     }
 }
