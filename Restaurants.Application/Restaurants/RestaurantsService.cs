@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Repositories;
@@ -9,19 +10,26 @@ internal class RestaurantsService : IRestaurantsService
 {
     private readonly IRestaurantsRepository _restaurantsRepository;
     private readonly ILogger<RestaurantsService> _logger;
+    private readonly IMapper _mapper;
     
-    public RestaurantsService(IRestaurantsRepository restaurantsRepository, ILogger<RestaurantsService> logger)
+    public RestaurantsService(IRestaurantsRepository restaurantsRepository, ILogger<RestaurantsService> logger,
+                              IMapper mapper)
     {
         _logger = logger;
         _restaurantsRepository = restaurantsRepository;
+        _mapper = mapper;
     }
     public async Task<IEnumerable<RestaurantDto>> GetAllRestaurants()
     {
         _logger.LogInformation("Getting All Restaurants");
         var restaurants = await _restaurantsRepository.GetAllAsync();
 
-        // Mapping the returned restaurants entities to a Dto to be returned to the controller.
-        var restaurantsDto = restaurants.Select(restaurant => RestaurantDto.MapEntityToDto(restaurant));
+        // Manual Mapping the returned restaurants entities to a Dto to be returned to the controller.
+        //var restaurantsDto = restaurants.Select(restaurant => RestaurantDto.MapEntityToDto(restaurant));
+
+        // Auto mapping the returned restaurants entities to a Dto to be returned to the controller.
+        var restaurantsDto = _mapper.Map<IEnumerable<RestaurantDto>>(restaurants);
+
         return restaurantsDto!;
     }
 
@@ -31,8 +39,12 @@ internal class RestaurantsService : IRestaurantsService
         
         var restaurant = await _restaurantsRepository.GetByIdAsync(id);
 
-        // Mapping the returned restaurant entity to a Dto to be returned to the controller.
-        var restaurantDto = RestaurantDto.MapEntityToDto(restaurant);
+        // Manual Mapping the returned restaurant entity to a Dto to be returned to the controller.
+        //var restaurantDto = RestaurantDto.MapEntityToDto(restaurant);
+
+        // Auto mapping the returned restaurant entity to a Dto to be returned to the controller.
+        var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
+
         return restaurantDto;
     }
 }
