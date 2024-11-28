@@ -15,16 +15,20 @@ public class CreateRestaurantDtoValidator : AbstractValidator<CreateRestaurantDt
             .NotEmpty()
             .WithMessage("Description is required.");
 
+        // Check for valid category using a predicate delegate instead of the custom method that is commented out.
         RuleFor(dto => dto.Category)
-            .Custom((value, context) =>
-            {
-                var isValidCategory = Categories.Contains(value);
+            .Must(category => Categories.Contains(category))
+            .WithMessage("Invalid Category, Please choose one of the valid categories.");
+            
+            //.Custom((value, context) =>
+            //{
+            //    var isValidCategory = Categories.Contains(value);
 
-                if (!isValidCategory)
-                {
-                    context.AddFailure("Category", "Invalid Category, Please choose one of the valid categories.");
-                }
-            });
+            //    if (!isValidCategory)
+            //    {
+            //        context.AddFailure("Category", "Invalid Category, Please choose one of the valid categories.");
+            //    }
+            //});
 
         RuleFor(dto => dto.ContactEmail)
             .EmailAddress()
