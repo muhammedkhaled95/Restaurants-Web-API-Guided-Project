@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Restaurants;
 
 namespace Restaurants.Application.Extensions;
@@ -19,7 +21,12 @@ public static class ServiceCollectionExtensions
          * Its assembly (YourClassLibrary.dll) is loaded at runtime.
          * AutoMapper scans that assembly for mapping profiles and registers them in the DI container.
          */
-        services.AddAutoMapper(typeof(ServiceCollectionExtensions).Assembly);
+        var applicationAssembly = typeof(ServiceCollectionExtensions).Assembly;
+        services.AddAutoMapper(applicationAssembly);
+
+        // Adding the fluent validation service the same way as we did with the auto mapper service above.
+        services.AddValidatorsFromAssembly(applicationAssembly)
+                .AddFluentValidationAutoValidation();
     }
 }
 
