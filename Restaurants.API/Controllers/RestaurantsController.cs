@@ -44,6 +44,11 @@ public class RestaurantsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto createRestaurantDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         int id = await _restaurantsService.CreateRestaurant(createRestaurantDto);
 
         // Returns a 201 Created response with the Location header pointing to the GetRestaurantById action.
