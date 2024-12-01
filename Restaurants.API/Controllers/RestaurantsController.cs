@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Restaurants;
+using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
 using Restaurants.Application.Restaurants.DTOs;
+using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
+using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 using System.Formats.Asn1;
 
 namespace Restaurants.API.Controllers;
@@ -10,17 +14,17 @@ namespace Restaurants.API.Controllers;
 [Route("api/restaurants")]
 public class RestaurantsController : ControllerBase
 {
-    private readonly IRestaurantsService _restaurantsService;
+    private readonly IMediator _mediator;
 
-    public RestaurantsController(IRestaurantsService restaurantsService)
+    public RestaurantsController(IMediator mediator)
     {
-        _restaurantsService = restaurantsService;
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var restautants = await _restaurantsService.GetAllRestaurants();
+        var restautants = await _mediator.Send(new GetAllRestaurantsQuery());
 
         return Ok(restautants);
     }
@@ -29,7 +33,7 @@ public class RestaurantsController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> GetRestaurantById([FromRoute] int id)
     {
-        var restaurant = await _restaurantsService.GetRestaurantById(id);
+        var restaurant = await _mediator.Send(new GetRestaurantByIdQuery(id));
 
         if (restaurant == null)
         {
@@ -42,14 +46,14 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto createRestaurantDto)
+    public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantCommand createRestaurantCommand)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        int id = await _restaurantsService.CreateRestaurant(createRestaurantDto);
+        int id = await _mediator.Send(createRestaurantCommand);
 
         // Returns a 201 Created response with the Location header pointing to the GetRestaurantById action.
         // - `CreatedAtAction` specifies the action used to generate the URL for the newly created resource.

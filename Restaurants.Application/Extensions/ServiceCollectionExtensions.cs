@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Restaurants;
 
@@ -9,8 +10,6 @@ public static class ServiceCollectionExtensions
 {
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IRestaurantsService, RestaurantsService>();
-
         //This line of code is used to register AutoMapper in the dependency injection (DI) container 
         //and configure it to automatically scan for mapping profiles in a specified assembly.
 
@@ -22,11 +21,15 @@ public static class ServiceCollectionExtensions
          * AutoMapper scans that assembly for mapping profiles and registers them in the DI container.
          */
         var applicationAssembly = typeof(ServiceCollectionExtensions).Assembly;
+
         services.AddAutoMapper(applicationAssembly);
 
         // Adding the fluent validation service the same way as we did with the auto mapper service above.
         services.AddValidatorsFromAssembly(applicationAssembly)
                 .AddFluentValidationAutoValidation();
+
+        // Register the Mediatr Service.
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(applicationAssembly));
     }
 }
 
