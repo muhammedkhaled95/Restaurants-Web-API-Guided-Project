@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Restaurants;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+using Restaurants.Application.Restaurants.Commands.DeleteRestaurants;
 using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
@@ -43,6 +44,23 @@ public class RestaurantsController : ControllerBase
             return Ok(restaurant);
         }
         
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> DeleteRestaurantById([FromRoute] int id)
+    {
+        bool isRestaurantDeleted = await _mediator.Send(new DeleteRestaurantCommand(id));
+
+        if (isRestaurantDeleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+
     }
 
     [HttpPost]
