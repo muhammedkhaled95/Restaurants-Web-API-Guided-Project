@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+using Restaurants.Application.Restaurants.Commands.UpdateRestaurants;
 using Restaurants.Domain.Entities;
 
 namespace Restaurants.Application.Restaurants.DTOs;
@@ -8,6 +9,8 @@ public class RestaurantsProfile : Profile
 {
     public RestaurantsProfile()
     {
+        // This map is used to map from the update restaurant command request data to the restaurant entity.
+        CreateMap<UpdateRestaurantCommand, Restaurant>();
         // This is used when we use CQRS to map between the command data and the entity.
         CreateMap<CreateRestaurantCommand, Restaurant>()
         .ForMember(d => d.Address, opt => opt.MapFrom(src =>

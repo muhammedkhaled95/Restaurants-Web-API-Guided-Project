@@ -30,3 +30,14 @@ Content-Type: application/json
 DELETE {{Restaurants.API_HostAddress}}/api/restaurants/1004
 
 ###
+
+PATCH {{Restaurants.API_HostAddress}}/api/restaurants/1007
+Content-Type: application/json
+
+{
+  "Name": "Bazooka",
+  "Description": "The best fried chicken in Egypt",
+  "HasDelivery": true
+}
+
+###

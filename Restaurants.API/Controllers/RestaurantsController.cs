@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Restaurants;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurants;
-using Restaurants.Application.Restaurants.DTOs;
+using Restaurants.Application.Restaurants.Commands.UpdateRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 using System.Formats.Asn1;
@@ -79,6 +79,25 @@ public class RestaurantsController : ControllerBase
         // - `new { id }` creates a route value for the URL by passing the ID of the new resource.
         // - The response body is set to `null` (no content); modify this if you want to include additional data in the response.
         return CreatedAtAction(nameof(GetRestaurantById), new { id }, null);
+
+    }
+
+    [HttpPatch]
+    [Route("{id}")]
+    public async Task<IActionResult> UpdateRestaurant([FromRoute] int id, UpdateRestaurantCommand command)
+    {
+        command.Id = id;
+
+        bool isRestaurantUpdated = await _mediator.Send(command);
+
+        if (isRestaurantUpdated)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
 
     }
 }

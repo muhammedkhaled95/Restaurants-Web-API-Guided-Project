@@ -8,15 +8,13 @@ namespace Restaurants.Application.Restaurants.Commands.DeleteRestaurants;
 
 public class DeleteRestaurantCommandHandler : IRequestHandler<DeleteRestaurantCommand, bool>
 {
-    private readonly ILogger<CreateRestaurantCommandHandler> _logger;
-    private readonly IMapper _mapper;
+    private readonly ILogger<DeleteRestaurantCommandHandler> _logger;
     private readonly IRestaurantsRepository _restaurantsRepository;
 
-    public DeleteRestaurantCommandHandler(ILogger<CreateRestaurantCommandHandler> logger, IMapper mapper, IRestaurantsRepository restaurantsRepository)
+    public DeleteRestaurantCommandHandler(ILogger<DeleteRestaurantCommandHandler> logger, IMapper mapper, IRestaurantsRepository restaurantsRepository)
     {
         _logger = logger;
         _restaurantsRepository = restaurantsRepository;
-        _mapper = mapper;
     }
     public async Task<bool> Handle(DeleteRestaurantCommand request, CancellationToken cancellationToken)
     {
