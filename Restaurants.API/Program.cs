@@ -15,6 +15,9 @@ builder.Services.AddSwaggerGen();
 // Registering the error handling middleware as a dependency.
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
+// Registering the request time logging middleware as a dependency.
+builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
+
 // Adding all the services in the DI container from the infrastructure Layer.
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -59,6 +62,9 @@ await seeder.Seed();
 //
 // The order is crucial: each middleware component is executed in the order defined.
 // No request or response bypasses these middleware steps unless explicitly handled within a middleware.
+
+// Adding the request time logging middleware in case the request took more than 4 seconds to be done.
+app.UseMiddleware<RequestTimeLoggingMiddleware>();
 
 // Adding the error handling middleware as the first one in the http request pipeline for middlewares.
 app.UseMiddleware<ErrorHandlingMiddleware>();
