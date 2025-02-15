@@ -5,7 +5,7 @@ GET {{Restaurants.API_HostAddress}}/api/restaurants
 
 ###
 
-GET {{Restaurants.API_HostAddress}}/api/restaurants/1005
+GET {{Restaurants.API_HostAddress}}/api/restaurants/1006
 
 ###
 
@@ -13,14 +13,14 @@ POST {{Restaurants.API_HostAddress}}/api/restaurants
 Content-Type: application/json
 
 {
-  "Name": "hagoga",
-  "Description": "Egyptian Authentic food",
-  "Category": "Egyptian",
+  "Name": "Amigos",
+  "Description": "Mexican food",
+  "Category": "Mexican",
   "HasDelivery": true,
-  "ContactEmail": "ContactUs@hagoga.com",
-  "ContactNumber": "0101111111111",
+  "ContactEmail": "ContactUs@amigos.com",
+  "ContactNumber": "01011111121211",
   "City": "Cairo",
-  "Street": "Madinet Nasr",
+  "Street": "Mokattam",
   "PostalCode": "97-726"
 
 }
@@ -31,12 +31,12 @@ DELETE {{Restaurants.API_HostAddress}}/api/restaurants/1004
 
 ###
 
-PATCH {{Restaurants.API_HostAddress}}/api/restaurants/1007
+PATCH {{Restaurants.API_HostAddress}}/api/restaurants/1006
 Content-Type: application/json
 
 {
-  "Name": "Bazooka",
-  "Description": "The best fried chicken in Egypt",
+  "Name": "Amigos",
+  "Description": "Mexican food in Egypt",
   "HasDelivery": true
 }
 

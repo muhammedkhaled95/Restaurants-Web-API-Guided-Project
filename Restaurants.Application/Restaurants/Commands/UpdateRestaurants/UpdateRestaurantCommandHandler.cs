@@ -21,7 +21,9 @@ public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCo
     }
     public async Task<bool> Handle(UpdateRestaurantCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Updating Restaurant with id = {request.Id}");
+        // The @ symbol instructs Serilog (and some other logging libraries) to serialize the request object as structured data.
+        // This way, the entire object can be easily queried or displayed in a structured log viewer.
+        _logger.LogInformation("Updating Restaurant with id = {request.Id} with {@restaurant}", request.Id, request);
         var restaurant = await _restaurantsRepository.GetByIdAsync(request.Id);
 
         if (restaurant == null)

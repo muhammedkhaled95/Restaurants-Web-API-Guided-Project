@@ -21,7 +21,9 @@ namespace Restaurants.Application.Restaurants.Commands.CreateRestaurants
 
         public async Task<int> Handle(CreateRestaurantCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Creating a new restaurant (resource)");
+            // The @ symbol instructs Serilog (and some other logging libraries) to serialize the request object as structured data.
+            // This way, the entire object can be easily queried or displayed in a structured log viewer.
+            _logger.LogInformation("Creating a new restaurant {@restaurant}", request);
 
             var restaurant = _mapper.Map<Restaurant>(request);
 
