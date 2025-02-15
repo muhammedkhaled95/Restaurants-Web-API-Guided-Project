@@ -23,17 +23,7 @@ builder.Services.AddApplication();
 //    - The 'configuration' parameter is used to set up logging levels, sinks, enrichers, etc.
 builder.Host.UseSerilog((context, configuration) =>
 {
-    // 2. Override default logging levels for specific namespaces.
-    //    - "Microsoft" logs will only be logged if they are Warning level or above.
-    //    - "Microsoft.EntityFrameworkCore" logs will be at the Information level or above.
-    //    - This helps reduce noise in logs by ignoring lower-level logs from the framework.
-    configuration
-        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-        .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
-
-        // 3. Write logs to the Console sink.
-        //    - You can add additional sinks here, e.g. .WriteTo.File(...) or .WriteTo.Seq(...).
-        .WriteTo.Console(outputTemplate: "[{Timestamp: dd-MM HH:mm:ss} {Level:u3}] |{SourceContext}|{NewLine}{Message:lj}{NewLine}{Exception}");
+    configuration.ReadFrom.Configuration(context.Configuration);
 });
 
 var app = builder.Build();
