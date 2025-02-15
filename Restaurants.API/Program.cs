@@ -7,8 +7,9 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+builder.Services.AddSwaggerGen();
 
 // Adding all the services in the DI container from the infrastructure Layer.
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -38,6 +39,15 @@ await seeder.Seed();
 //    - This middleware automatically logs HTTP request information such as the HTTP method,
 //      request path, status code, and the time taken to process the request.
 app.UseSerilogRequestLogging();
+
+// Using Swagger docs onl in case of development environment.
+if (app.Environment.IsDevelopment())
+{
+    // Using Swagger
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();

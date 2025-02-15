@@ -5,6 +5,7 @@ using Restaurants.Application.Restaurants;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurants;
 using Restaurants.Application.Restaurants.Commands.UpdateRestaurants;
+using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 using System.Formats.Asn1;
@@ -23,7 +24,7 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
     {
         var restautants = await _mediator.Send(new GetAllRestaurantsQuery());
 
@@ -32,7 +33,7 @@ public class RestaurantsController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetRestaurantById([FromRoute] int id)
+    public async Task<ActionResult<RestaurantDto>> GetRestaurantById([FromRoute] int id)
     {
         var restaurant = await _mediator.Send(new GetRestaurantByIdQuery(id));
 
@@ -48,6 +49,16 @@ public class RestaurantsController : ControllerBase
 
     [HttpDelete]
     [Route("{id}")]
+    /*
+     * In ASP.NET Web API, the [ProducesResponseType] attribute is used to document the possible HTTP response types of an action method.
+     * It is especially useful for Swagger (OpenAPI) documentation, where it helps describe the expected responses clearly. How It Affects Swagger Docs:
+
+        -It adds response information to the Swagger UI.
+        -It shows the HTTP status codes and their associated response types.
+        -It improves API documentation, making it easier for consumers to understand what to expect.
+     */
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteRestaurantById([FromRoute] int id)
     {
         bool isRestaurantDeleted = await _mediator.Send(new DeleteRestaurantCommand(id));
@@ -84,6 +95,8 @@ public class RestaurantsController : ControllerBase
 
     [HttpPatch]
     [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateRestaurant([FromRoute] int id, UpdateRestaurantCommand command)
     {
         command.Id = id;
