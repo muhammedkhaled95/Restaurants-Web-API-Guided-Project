@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
+using Restaurants.Domain.Entities;
+using Restaurants.Domain.Exceptions;
 using Restaurants.Domain.Repositories;
 
 namespace Restaurants.Application.Restaurants.Queries.GetRestaurantById;
@@ -21,11 +23,12 @@ public class GetRestaurantByIdQueryHandler : IRequestHandler<GetRestaurantByIdQu
         
     }
 
-    public async Task<RestaurantDto?> Handle(GetRestaurantByIdQuery request, CancellationToken cancellationToken)
+    public async Task<RestaurantDto> Handle(GetRestaurantByIdQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting Restaurant with {RestaurantId}", request.Id);
 
-        var restaurant = await _restaurantsRepository.GetByIdAsync(request.Id);
+        var restaurant = await _restaurantsRepository.GetByIdAsync(request.Id)
+            ?? throw new ResourceNotFoundException(nameof(Restaurant), request.Id.ToString());
 
         // Manual Mapping the returned restaurant entity to a Dto to be returned to the controller.
         //var restaurantDto = RestaurantDto.MapEntityToDto(restaurant);

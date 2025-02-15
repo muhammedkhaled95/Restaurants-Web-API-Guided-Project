@@ -3,11 +3,12 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
 using Restaurants.Domain.Entities;
+using Restaurants.Domain.Exceptions;
 using Restaurants.Domain.Repositories;
 
 namespace Restaurants.Application.Restaurants.Commands.UpdateRestaurants;
 
-public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCommand, bool>
+public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCommand>
 {
     private readonly ILogger<UpdateRestaurantCommandHandler> _logger;
     private readonly IRestaurantsRepository _restaurantsRepository;
@@ -19,7 +20,7 @@ public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCo
         _logger = logger;
         _restaurantsRepository = restaurantsRepository;
     }
-    public async Task<bool> Handle(UpdateRestaurantCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateRestaurantCommand request, CancellationToken cancellationToken)
     {
         // The @ symbol instructs Serilog (and some other logging libraries) to serialize the request object as structured data.
         // This way, the entire object can be easily queried or displayed in a structured log viewer.
@@ -28,7 +29,7 @@ public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCo
 
         if (restaurant == null)
         {
-            return false;
+            throw new ResourceNotFoundException(nameof(Restaurant), request.Id.ToString());
         }
 
         // Using the auto mapper instead of manually mapping the request to the restaurant as in the commented out part.
@@ -39,6 +40,5 @@ public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCo
         restaurant.HasDelivery = request.HasDelivery;
         */
         await _restaurantsRepository.SaveChanges();
-        return true;
     }
 }

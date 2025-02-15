@@ -1,4 +1,6 @@
-﻿namespace Restaurants.API.Middlewares
+﻿using Restaurants.Domain.Exceptions;
+
+namespace Restaurants.API.Middlewares
 {
     /// <summary>
     /// Middleware for global error handling in the application.
@@ -31,6 +33,15 @@
             {
                 // Invoke the next middleware in the pipeline.
                 await next.Invoke(context);
+            }
+            // catching a custom made exception for resources that were not found.
+            catch (ResourceNotFoundException notFoundEx)
+            {
+                _logger.LogWarning(notFoundEx, notFoundEx.Message);
+
+                context.Response.StatusCode = 404;
+
+                await context.Response.WriteAsync(notFoundEx.Message);
             }
             catch (Exception ex)
             {
