@@ -5,9 +5,9 @@ using System;
 
 namespace Restaurants.Infrastructure.Persistence
 {
-    internal class RestaurantsDbContext : DbContext
+    internal class ApplicationDbContext : DbContext
     {
-        public RestaurantsDbContext(DbContextOptions<RestaurantsDbContext> options) : base(options) // Pass options to the base DbContext class constructor
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) // Pass options to the base DbContext class constructor
         {
 
         }

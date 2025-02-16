@@ -41,3 +41,23 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{Restaurants.API_HostAddress}}/api/restaurants/1006/dishes
+Content-Type: application/json
+
+{
+  "Name": "Burritos",
+  "Description": "Delicious fajita burrito",
+  "Price": 170,
+  "KiloCalories": 1200
+}
+
+###
+
+GET {{Restaurants.API_HostAddress}}/api/restaurants/1006/dishes/4
+
+###
+
+GET {{Restaurants.API_HostAddress}}/api/restaurants/1006/dishes
+
+###

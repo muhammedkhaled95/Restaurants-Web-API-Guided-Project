@@ -17,7 +17,7 @@ namespace Restaurants.Infrastructure.Extensions
 
             // Register the RestaurantsDbContext with the dependency injection container.
             // This tells EF Core how to connect to the database and provides additional options.
-            services.AddDbContext<RestaurantsDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 // Configure EF Core to use SQL Server with the provided connection string.
                 options.UseSqlServer(connectionString)
                        // EnableSensitiveDataLogging includes detailed parameter values and other sensitive data
@@ -28,6 +28,7 @@ namespace Restaurants.Infrastructure.Extensions
 
             services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
             services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
+            services.AddScoped<IDishesRepository, DishesRepository>();
         }
     }
 }
