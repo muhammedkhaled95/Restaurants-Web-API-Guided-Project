@@ -12,4 +12,10 @@ class DishesRepository(ApplicationDbContext dbContext) : IDishesRepository
         await dbContext.SaveChangesAsync();
         return dishEntity.Id;
     }
+
+    public async Task Delete(List<Dish> dishEntities)
+    {
+        dbContext.Dishes.RemoveRange(dishEntities);
+        await dbContext.SaveChangesAsync();
+    }
 }
