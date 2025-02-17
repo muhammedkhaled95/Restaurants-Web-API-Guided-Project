@@ -6,7 +6,7 @@ using Restaurants.Domain.Exceptions;
 using Restaurants.Domain.Repositories;
 namespace Restaurants.Application.Dishes.Commands.CreateDishes;
 
-public class CreateDishCommandHandler : IRequestHandler<CreateDishCommand>
+public class CreateDishCommandHandler : IRequestHandler<CreateDishCommand, int>
 {
     private readonly ILogger<CreateDishCommandHandler> _logger;
     private readonly IRestaurantsRepository _restaurantsRepository;
@@ -22,7 +22,7 @@ public class CreateDishCommandHandler : IRequestHandler<CreateDishCommand>
     }
 
 
-    public async Task Handle(CreateDishCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateDishCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Creating a new Dish: {@CreateDishRequest}", request);
 
@@ -34,7 +34,7 @@ public class CreateDishCommandHandler : IRequestHandler<CreateDishCommand>
 
         var dish = _mapper.Map<Dish>(request);
 
-        await _dishesRepository.Create(dish);
+        return await _dishesRepository.Create(dish);
 
     }
 }

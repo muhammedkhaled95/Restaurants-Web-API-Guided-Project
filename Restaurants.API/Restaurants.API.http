@@ -46,10 +46,10 @@ POST {{Restaurants.API_HostAddress}}/api/restaurants/1006/dishes
 Content-Type: application/json
 
 {
-  "Name": "Burritos",
-  "Description": "Delicious fajita burrito",
-  "Price": 170,
-  "KiloCalories": 1200
+  "Name": "Tacos",
+  "Description": "Delicious beef Tacos",
+  "Price": 179,
+  "KiloCalories": 1400
 }
 
 ###
