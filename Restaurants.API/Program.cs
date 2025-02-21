@@ -172,8 +172,23 @@ if (app.Environment.IsDevelopment())
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
-// Maps Identity endpoints automatically without controller files.
-app.MapIdentityApi<User>();
+
+// 📝 Maps Identity API endpoints without the need for separate controller files.
+// 📍 URL Prefix: Adds "api/identity" as a prefix to all Identity-related endpoints (e.g., /api/identity/login, /api/identity/register).
+// 🔄 Automatically includes built-in endpoints for user authentication and account management provided by ASP.NET Identity.
+// ✅ Benefits:
+//   - Reduces boilerplate code by auto-generating routes for login, register, logout, etc.
+//   - Ensures consistency with Identity conventions without writing explicit controllers.
+//   - Makes Identity endpoints discoverable under a common URL prefix for easier management.
+//
+// 🛡️ Example generated endpoints:
+//   - POST /api/identity/login
+//   - POST /api/identity/register
+//   - POST /api/identity/logout
+//
+// 🔔 TIP: Customize Identity options (like token lifespan or password requirements) in the Identity configuration section.
+app.MapGroup("api/identity").MapIdentityApi<User>();
+
 
 app.UseAuthorization();
 
