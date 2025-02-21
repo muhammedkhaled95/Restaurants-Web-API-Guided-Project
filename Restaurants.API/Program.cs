@@ -83,8 +83,13 @@ app.UseHttpsRedirection();
 //   - POST /api/identity/register
 //   - POST /api/identity/logout
 //
+// Adds a "Identity" tag in Swagger UI to group these endpoints under the "Identity" section,
+// making the API documentation clearer and easier to navigate.
+
 // 🔔 TIP: Customize Identity options (like token lifespan or password requirements) in the Identity configuration section.
-app.MapGroup("api/identity").MapIdentityApi<User>();
+app.MapGroup("api/identity")
+   .WithTags("Identity")
+   .MapIdentityApi<User>();
 
 
 app.UseAuthorization();
