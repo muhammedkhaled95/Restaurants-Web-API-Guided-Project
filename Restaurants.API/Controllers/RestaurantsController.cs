@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Restaurants;
@@ -24,6 +25,7 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
     {
         var restautants = await _mediator.Send(new GetAllRestaurantsQuery());
