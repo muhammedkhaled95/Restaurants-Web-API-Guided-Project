@@ -26,6 +26,7 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]    
     public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
     {
         var restautants = await _mediator.Send(new GetAllRestaurantsQuery());
