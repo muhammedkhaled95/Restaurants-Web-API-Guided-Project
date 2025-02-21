@@ -83,3 +83,12 @@ Content-Type: application/json
   "email": "testuser1@test.com",
   "password": "Password_1"
 }
+
+PATCH {{Restaurants.API_HostAddress}}/api/identity/user
+Content-Type: application/json
+
+{
+  //UpdateUserDetailsCommand
+}
+
+###
