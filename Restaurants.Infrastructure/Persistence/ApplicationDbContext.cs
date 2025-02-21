@@ -1,11 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Restaurants.Domain.Entities;
 using System;
 
 namespace Restaurants.Infrastructure.Persistence
 {
-    internal class ApplicationDbContext : DbContext
+    internal class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) // Pass options to the base DbContext class constructor
         {

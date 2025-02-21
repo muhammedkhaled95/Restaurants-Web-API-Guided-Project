@@ -4,6 +4,7 @@ using Restaurants.Infrastructure.Seeders;
 using Serilog;
 using Serilog.Events;
 using Restaurants.API.Middlewares;
+using Restaurants.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,9 @@ if (app.Environment.IsDevelopment())
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
+
+// Maps Identity endpoints automatically without controller files.
+app.MapIdentityApi<User>();
 
 app.UseAuthorization();
 
