@@ -6,7 +6,7 @@ Authorization: Bearer {{token}}
 ###
 
 GET {{Restaurants.API_HostAddress}}/api/restaurants/1006
-
+Authorization: Bearer {{token}}
 ###
 
 POST {{Restaurants.API_HostAddress}}/api/restaurants

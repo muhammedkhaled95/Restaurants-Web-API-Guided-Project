@@ -15,6 +15,7 @@ namespace Restaurants.API.Controllers;
 
 [ApiController]
 [Route("api/restaurants")]
+[Authorize]
 public class RestaurantsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -25,7 +26,6 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
     {
         var restautants = await _mediator.Send(new GetAllRestaurantsQuery());
