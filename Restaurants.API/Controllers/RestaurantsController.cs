@@ -10,7 +10,6 @@ using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 using Restaurants.Domain.Constants;
-using System.Formats.Asn1;
 
 namespace Restaurants.API.Controllers;
 
