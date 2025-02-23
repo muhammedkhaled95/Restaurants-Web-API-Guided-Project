@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Domain.Entities;
@@ -52,6 +53,15 @@ namespace Restaurants.Infrastructure.Extensions
             // - Ready-to-use endpoints for authentication and authorization.
             // - No need to manually write CRUD operations for Identity entities.
             services.AddIdentityApiEndpoints<User>()
+                    /// <summary>
+                    /// Registers role management services for ASP.NET Core Identity, enabling support for role-based authorization.
+                    /// </summary>
+                    /// <remarks>
+                    /// Adds the necessary services to manage roles using <see cref="RoleManager{IdentityRole}"/> 
+                    /// and enables the use of role-based attributes like <c>[Authorize(Roles = "admin")]</c>.
+                    /// This method allows creating, updating, deleting, and assigning roles to users.
+                    /// </remarks>
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
