@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Repositories;
+using Restaurants.Infrastructure.Authorization;
 using Restaurants.Infrastructure.Persistence;
 using Restaurants.Infrastructure.Repositories;
 using Restaurants.Infrastructure.Seeders;
@@ -62,6 +63,7 @@ namespace Restaurants.Infrastructure.Extensions
                     /// This method allows creating, updating, deleting, and assigning roles to users.
                     /// </remarks>
                     .AddRoles<IdentityRole>()
+                    .AddClaimsPrincipalFactory<RestaurantsUserClaimsPrincipalFactory>()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
