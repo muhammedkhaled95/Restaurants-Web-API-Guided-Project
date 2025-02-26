@@ -10,6 +10,7 @@ using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 using Restaurants.Domain.Constants;
+using Restaurants.Infrastructure.Authorization;
 
 namespace Restaurants.API.Controllers;
 
@@ -36,7 +37,7 @@ public class RestaurantsController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    [Authorize(Policy = "HasNationality")]
+    [Authorize(Policy = PolicyNames.HasNationality)]
     public async Task<ActionResult<RestaurantDto>> GetRestaurantById([FromRoute] int id)
     {
         var restaurant = await _mediator.Send(new GetRestaurantByIdQuery(id));
