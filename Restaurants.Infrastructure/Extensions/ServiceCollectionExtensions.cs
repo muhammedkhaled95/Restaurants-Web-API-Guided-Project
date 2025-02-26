@@ -69,6 +69,14 @@ namespace Restaurants.Infrastructure.Extensions
             services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
             services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
             services.AddScoped<IDishesRepository, DishesRepository>();
+
+            // Registers the authorization services into the dependency injection (DI) container.
+            // This enables the application to use ASP.NET Core's built-in authorization system,
+            // allowing you to define and enforce policies, roles, and claims-based access control.
+            // This method prepares the app to handle [Authorize] attributes and custom authorization handlers.
+            services.AddAuthorizationBuilder()
+                    .AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+
         }
     }
 }
