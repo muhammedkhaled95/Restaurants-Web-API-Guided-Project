@@ -21,10 +21,15 @@ namespace Restaurants.Infrastructure.Persistence
 
             modelBuilder.Entity<Restaurant>().OwnsOne(r => r.Address);
 
-            modelBuilder.Entity<Restaurant>().HasMany(r => r.dishes).
-                                              WithOne().
-                                              HasForeignKey(d => d.RestaurantId).
-                                              OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Restaurant>().HasMany(r => r.dishes)
+                                             .WithOne()
+                                             .HasForeignKey(d => d.RestaurantId)
+                                             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>().HasMany(u => u.OwnedRestaurants)
+                                       .WithOne(r => r.Owner)
+                                       .HasForeignKey(r => r.OwnerId)
+                                       .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
