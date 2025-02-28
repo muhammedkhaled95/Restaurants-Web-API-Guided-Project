@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Repositories;
 using Restaurants.Infrastructure.Authorization;
+using Restaurants.Infrastructure.Authorization.Requirements;
 using Restaurants.Infrastructure.Persistence;
 using Restaurants.Infrastructure.Repositories;
 using Restaurants.Infrastructure.Seeders;
@@ -75,7 +77,11 @@ namespace Restaurants.Infrastructure.Extensions
             // allowing you to define and enforce policies, roles, and claims-based access control.
             // This method prepares the app to handle [Authorize] attributes and custom authorization handlers.
             services.AddAuthorizationBuilder()
-                    .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimTypes.Nationality, "German", "Egyptian"));
+                    .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimTypes.Nationality, "German", "Egyptian"))
+                    .AddPolicy(PolicyNames.AtLeast20YearsOfAge,
+                    builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
+
+            services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
 
         }
     }
