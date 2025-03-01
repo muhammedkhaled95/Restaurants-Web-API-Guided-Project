@@ -43,6 +43,12 @@ namespace Restaurants.API.Middlewares
 
                 await context.Response.WriteAsync(notFoundEx.Message);
             }
+            catch (ForbidException fex)
+            {
+                _logger.LogError(fex, fex.Message);
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("Access to resource is forbidden");
+            }
             catch (Exception ex)
             {
                 // Log the exception with its message.

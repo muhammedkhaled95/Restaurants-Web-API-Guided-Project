@@ -2,8 +2,10 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+using Restaurants.Domain.Constants;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Exceptions;
+using Restaurants.Domain.Interfaces;
 using Restaurants.Domain.Repositories;
 
 namespace Restaurants.Application.Restaurants.Commands.UpdateRestaurants;
@@ -13,12 +15,17 @@ public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCo
     private readonly ILogger<UpdateRestaurantCommandHandler> _logger;
     private readonly IRestaurantsRepository _restaurantsRepository;
     private readonly IMapper _mapper;
+    private readonly IRestaurantAuthorizationService _restaurantAuthorizationService;
 
-    public UpdateRestaurantCommandHandler(ILogger<UpdateRestaurantCommandHandler> logger, IMapper mapper, IRestaurantsRepository restaurantsRepository)
+    public UpdateRestaurantCommandHandler(ILogger<UpdateRestaurantCommandHandler> logger,
+                                          IMapper mapper,
+                                          IRestaurantsRepository restaurantsRepository,
+                                          IRestaurantAuthorizationService restaurantAuthorizationService)
     {
         _mapper = mapper;
         _logger = logger;
         _restaurantsRepository = restaurantsRepository;
+        _restaurantAuthorizationService = restaurantAuthorizationService;
     }
     public async Task Handle(UpdateRestaurantCommand request, CancellationToken cancellationToken)
     {
@@ -32,6 +39,11 @@ public class UpdateRestaurantCommandHandler : IRequestHandler<UpdateRestaurantCo
             throw new ResourceNotFoundException(nameof(Restaurant), request.Id.ToString());
         }
 
+        bool IsUpdateOperationAuthorized = _restaurantAuthorizationService.Authorize(restaurant, ResourceOperation.Update);
+        if (!IsUpdateOperationAuthorized)
+        {
+            throw new ForbidException();
+        }
         // Using the auto mapper instead of manually mapping the request to the restaurant as in the commented out part.
         _mapper.Map(request, restaurant);
         /*
