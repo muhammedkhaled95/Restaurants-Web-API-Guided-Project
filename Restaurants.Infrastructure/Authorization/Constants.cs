@@ -4,6 +4,7 @@ public static class PolicyNames
 {
     public const string HasNationality = "HasNationality";
     public const string AtLeast20YearsOfAge = "AtLeast20YearsOfAge";
+    public const string CreatedAtLeastTwoRestaurants = "CreatedAtLeastTwoRestaurants";
 }
 
 public static class AppClaimTypes

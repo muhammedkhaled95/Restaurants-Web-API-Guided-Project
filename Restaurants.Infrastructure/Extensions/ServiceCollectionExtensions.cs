@@ -81,9 +81,12 @@ namespace Restaurants.Infrastructure.Extensions
             services.AddAuthorizationBuilder()
                     .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimTypes.Nationality, "German", "Egyptian"))
                     .AddPolicy(PolicyNames.AtLeast20YearsOfAge,
-                    builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
+                    builder => builder.AddRequirements(new MinimumAgeRequirement(20)))
+                    .AddPolicy(PolicyNames.CreatedAtLeastTwoRestaurants, 
+                    builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
 
             services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+            services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
             services.AddScoped<IRestaurantAuthorizationService,  RestaurantAuthorizationService>();
 
         }
