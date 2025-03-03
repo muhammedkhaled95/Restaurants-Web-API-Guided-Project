@@ -20,9 +20,10 @@ public class GetAllRestaurantsQueryHandler : IRequestHandler<GetAllRestaurantsQu
 
     public async Task<IEnumerable<RestaurantDto>> Handle(GetAllRestaurantsQuery request, CancellationToken cancellationToken)
     {
+        var searchPhraseLower = request.SearchPhrase?.ToLower();
         _logger.LogInformation("Getting All Restaurants");
-        var restaurants = await _restaurantsRepository.GetAllAsync();
-
+        var restaurants = await _restaurantsRepository.GetAllMatchingAsync(request.SearchPhrase);
+        
         // Manual Mapping the returned restaurants entities to a Dto to be returned to the controller.
         //var restaurantsDto = restaurants.Select(restaurant => RestaurantDto.MapEntityToDto(restaurant));
 

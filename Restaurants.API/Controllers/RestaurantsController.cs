@@ -27,11 +27,11 @@ public class RestaurantsController : ControllerBase
     }
 
     [HttpGet]
-    //[AllowAnonymous]
-    [Authorize(Policy = PolicyNames.CreatedAtLeastTwoRestaurants)]
-    public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
+    [AllowAnonymous]
+    //[Authorize(Policy = PolicyNames.CreatedAtLeastTwoRestaurants)]
+    public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll([FromQuery] GetAllRestaurantsQuery? query)
     {
-        var restautants = await _mediator.Send(new GetAllRestaurantsQuery());
+        var restautants = await _mediator.Send(query!);
 
         return Ok(restautants);
     }
