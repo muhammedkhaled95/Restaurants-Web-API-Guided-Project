@@ -14,18 +14,22 @@ internal class RestaurantsRepository(ApplicationDbContext dbContext) : IRestaura
         return restaurants;
     }
 
-    public async Task<IEnumerable<Restaurant>> GetAllMatchingAsync(string? SearchPhrase, int PageNumber, int PageSize)
+    public async Task<(IEnumerable<Restaurant>, int)> GetAllMatchingAsync(string? SearchPhrase, int PageNumber, int PageSize)
     {
         var searchPhraseLower = SearchPhrase?.ToLower();
 
-        var restaurants = await dbContext.Restaurants.Where(r => searchPhraseLower == null ||
+        var baseQuery = dbContext.Restaurants.Where(r => searchPhraseLower == null ||
                 (!string.IsNullOrEmpty(r.Name) && r.Name.Contains(searchPhraseLower))
-                || (!string.IsNullOrEmpty(r.Description) && r.Description.ToLower().Contains(searchPhraseLower)))
-            //Applying pagination with Skip and Take
-            .Skip(PageSize * (PageNumber - 1)).Take(PageSize)
-            .ToListAsync();
+                || (!string.IsNullOrEmpty(r.Description) && r.Description.ToLower().Contains(searchPhraseLower)));
 
-        return restaurants;
+        var totalCount = await baseQuery.CountAsync();
+
+        //Applying pagination with Skip and Take
+        var restaurants = await baseQuery.Skip(PageSize * (PageNumber - 1))
+                                   .Take(PageSize)
+                                   .ToListAsync();
+
+        return (restaurants, totalCount);
     }
 
 public async Task<Restaurant?> GetByIdAsync(int id)

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Restaurants.Application.Common;
 using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Domain.Repositories;
 
 namespace Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 
-public class GetAllRestaurantsQueryHandler : IRequestHandler<GetAllRestaurantsQuery, IEnumerable<RestaurantDto>>
+public class GetAllRestaurantsQueryHandler : IRequestHandler<GetAllRestaurantsQuery, PagedResults<RestaurantDto>>
 {
     private readonly ILogger<GetAllRestaurantsQueryHandler> _logger;
     private readonly IMapper _mapper;
@@ -18,18 +19,18 @@ public class GetAllRestaurantsQueryHandler : IRequestHandler<GetAllRestaurantsQu
         _logger = logger;
     }
 
-    public async Task<IEnumerable<RestaurantDto>> Handle(GetAllRestaurantsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResults<RestaurantDto>> Handle(GetAllRestaurantsQuery request, CancellationToken cancellationToken)
     {
         var searchPhraseLower = request.SearchPhrase?.ToLower();
         _logger.LogInformation("Getting All Restaurants");
-        var restaurants = await _restaurantsRepository.GetAllMatchingAsync(request.SearchPhrase, request.PageNumber, request.PageSize);
+        var (restaurants, totalCount) = await _restaurantsRepository.GetAllMatchingAsync(request.SearchPhrase, request.PageNumber, request.PageSize);
         
         // Manual Mapping the returned restaurants entities to a Dto to be returned to the controller.
         //var restaurantsDto = restaurants.Select(restaurant => RestaurantDto.MapEntityToDto(restaurant));
 
         // Auto mapping the returned restaurants entities to a Dto to be returned to the controller.
         var restaurantsDto = _mapper.Map<IEnumerable<RestaurantDto>>(restaurants);
-
-        return restaurantsDto!;
+        var results = new PagedResults<RestaurantDto>(restaurantsDto, totalCount, request.PageSize, request.PageNumber);
+        return results;
     }
 }
