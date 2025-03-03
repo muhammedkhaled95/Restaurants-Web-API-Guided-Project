@@ -14,13 +14,16 @@ internal class RestaurantsRepository(ApplicationDbContext dbContext) : IRestaura
         return restaurants;
     }
 
-    public async Task<IEnumerable<Restaurant>> GetAllMatchingAsync(string? SearchPhrase)
+    public async Task<IEnumerable<Restaurant>> GetAllMatchingAsync(string? SearchPhrase, int PageNumber, int PageSize)
     {
         var searchPhraseLower = SearchPhrase?.ToLower();
 
         var restaurants = await dbContext.Restaurants.Where(r => searchPhraseLower == null ||
                 (!string.IsNullOrEmpty(r.Name) && r.Name.Contains(searchPhraseLower))
-                || (!string.IsNullOrEmpty(r.Description) && r.Description.ToLower().Contains(searchPhraseLower))).ToListAsync();
+                || (!string.IsNullOrEmpty(r.Description) && r.Description.ToLower().Contains(searchPhraseLower)))
+            //Applying pagination with Skip and Take
+            .Skip(PageSize * (PageNumber - 1)).Take(PageSize)
+            .ToListAsync();
 
         return restaurants;
     }

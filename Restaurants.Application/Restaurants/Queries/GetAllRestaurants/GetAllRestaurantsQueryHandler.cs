@@ -22,7 +22,7 @@ public class GetAllRestaurantsQueryHandler : IRequestHandler<GetAllRestaurantsQu
     {
         var searchPhraseLower = request.SearchPhrase?.ToLower();
         _logger.LogInformation("Getting All Restaurants");
-        var restaurants = await _restaurantsRepository.GetAllMatchingAsync(request.SearchPhrase);
+        var restaurants = await _restaurantsRepository.GetAllMatchingAsync(request.SearchPhrase, request.PageNumber, request.PageSize);
         
         // Manual Mapping the returned restaurants entities to a Dto to be returned to the controller.
         //var restaurantsDto = restaurants.Select(restaurant => RestaurantDto.MapEntityToDto(restaurant));
