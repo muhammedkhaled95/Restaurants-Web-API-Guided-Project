@@ -16,6 +16,8 @@ namespace Restaurants.Application.Users.Tests  // Namespace organizing the tests
         /// Verifies that GetCurrentUser correctly extracts user information (ID, email, roles, nationality, date of birth)
         /// from the HttpContext's User object when the user is authenticated.
         /// </summary>
+        ///   // Naming convention explanation:
+              // [MethodName]_GivenScenario_ExpectedOutcome
         [Fact]
         public void GetCurrentUserTest_WithAuthenticatedUser_ShouldReturnCurrentUser()
         {
