@@ -33,7 +33,7 @@ namespace Restaurants.Application.Restaurants.Commands.CreateRestaurants
             _logger.LogInformation("{UserEmail} with [{Id}] is Creating a new restaurant {@restaurant}", currentUser!.Email, currentUser.Id, request);
 
             var restaurant = _mapper.Map<Restaurant>(request);
-            restaurant.OwnerId = _userContext.GetCurrentUser()!.Id;
+            restaurant.OwnerId = currentUser!.Id;
 
             int id = await _restaurantsRepository.Create(restaurant);
 
