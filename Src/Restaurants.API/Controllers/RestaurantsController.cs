@@ -129,7 +129,7 @@ public class RestaurantsController : ControllerBase
         var command = new UploadRestaurantLogoCommand()
         {
             RestaurantId = id,   // Assign the provided restaurant ID
-            FileName = file.FileName, // Capture the original file name
+            FileName = $"{id}-{file.FileName}", // Capture the original file name
             File = stream  // Pass the file stream for processing
         };
 
