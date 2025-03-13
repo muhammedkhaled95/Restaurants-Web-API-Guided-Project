@@ -12,6 +12,7 @@ namespace Restaurants.Infrastructure.Persistence
         {
 
         }
+
         internal DbSet<Restaurant> Restaurants { get; set; }
         internal DbSet<Dish> Dishes { get; set; }
 

@@ -2,15 +2,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Restaurants.Application.Restaurants;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurants;
 using Restaurants.Application.Restaurants.Commands.UpdateRestaurants;
+using Restaurants.Application.Restaurants.Commands.UploadRestaurantsLogo;
 using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 using Restaurants.Domain.Constants;
 using Restaurants.Infrastructure.Authorization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Restaurants.API.Controllers;
 
@@ -94,4 +97,47 @@ public class RestaurantsController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+
+
+    /// <summary>
+    /// Uploads a logo for a specific restaurant.
+    /// </summary>
+    /// <param name="id">The unique identifier of the restaurant.</param>
+    /// <param name="file">The image file to be uploaded as the restaurant logo.</param>
+    /// <returns>Returns a 204 No Content response if the upload is successful.</returns>
+    /// <remarks>
+    /// This endpoint allows users to upload a logo for a restaurant.
+    /// The uploaded file is processed and stored as per the business logic in <see cref="UploadRestaurantLogoCommand"/>.
+    /// </remarks>
+    /// <response code="204">Logo uploaded successfully.</response>
+    /// <response code="400">Invalid request or file is missing.</response>
+    /// <response code="500">An error occurred while processing the request.</response>
+    [HttpPost] // Specifies that this action handles HTTP POST requests
+    [Route("{id}/logo")] // Defines the route as "/{id}/logo", meaning the request must include a restaurant ID in the URL
+    public async Task<IActionResult> UploadRestaurantLogo([FromRoute] int id, IFormFile file)
+    {
+        // Ensure that the file is not null before proceeding
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("File is required."); // Return a 400 response if no file is provided
+        }
+
+        // Open a read stream from the uploaded file
+        using var stream = file.OpenReadStream();
+
+        // Create a command object that will be sent to the Mediator (CQRS pattern)
+        var command = new UploadRestaurantLogoCommand()
+        {
+            RestaurantId = id,   // Assign the provided restaurant ID
+            FileName = file.FileName, // Capture the original file name
+            File = stream  // Pass the file stream for processing
+        };
+
+        // Send the command to the Mediator, which will handle the logic of storing the logo
+        await _mediator.Send(command);
+
+        // Return a 204 No Content response to indicate success without returning any content
+        return NoContent();
+    }
+
 }

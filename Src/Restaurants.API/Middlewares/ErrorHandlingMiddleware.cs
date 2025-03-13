@@ -49,6 +49,12 @@ namespace Restaurants.API.Middlewares
                 context.Response.StatusCode = 403;
                 await context.Response.WriteAsync("Access to resource is forbidden");
             }
+            catch (BlobAlreadyExistsException blobAlreadyExistsEx)
+            {
+                _logger.LogError(blobAlreadyExistsEx, blobAlreadyExistsEx.Message);
+                context.Response.StatusCode = 409;
+                await context.Response.WriteAsync("Blob already exists in the container in Azure");
+            }
             catch (Exception ex)
             {
                 // Log the exception with its message.
