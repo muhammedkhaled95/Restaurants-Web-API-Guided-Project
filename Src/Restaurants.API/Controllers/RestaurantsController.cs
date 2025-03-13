@@ -41,7 +41,7 @@ public class RestaurantsController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    [Authorize(Policy = PolicyNames.HasNationality)]
+    //[Authorize(Policy = PolicyNames.HasNationality)]
     //[Authorize(Policy = PolicyNames.AtLeast20YearsOfAge)]
     public async Task<ActionResult<RestaurantDto>> GetRestaurantById([FromRoute] int id)
     {

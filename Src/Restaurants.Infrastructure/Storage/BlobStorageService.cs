@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
 using Microsoft.Extensions.Options;
 using Restaurants.Domain.Exceptions;
 using Restaurants.Domain.Interfaces;
@@ -55,5 +56,52 @@ internal class BlobStorageService : IBlobStorageService
 
         // Retrieve and return the URL of the uploaded blob.
         return blobClient.Uri.ToString();
+    }
+
+    /// <summary>
+    /// Generates a Shared Access Signature (SAS) URL for a given blob URL, 
+    /// allowing temporary read access to the blob.
+    /// </summary>
+    /// <param name="blobUrl">The URL of the blob for which the SAS token is generated.</param>
+    /// <returns>
+    /// A SAS URL with a read permission token appended, or null if the input URL is invalid.
+    /// </returns>
+    public string? GetBlobSASUrl(string? blobUrl)
+    {
+        // Validate the input URL
+        if (string.IsNullOrWhiteSpace(blobUrl)) return null;
+
+        // Create a SAS builder for generating the token
+        var sasBuilder = new BlobSasBuilder()
+        {
+            BlobContainerName = _blobStorageSettings.LogosContainerName, // Blob container name
+            Resource = "b", // Specifies that the resource is a blob
+            StartsOn = DateTimeOffset.UtcNow, // Start time (immediate activation)
+            ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(30), // Expiry time (valid for 30 minutes)
+            BlobName = GetBlobNameFromBlobUrl(blobUrl) // Extract blob name from URL
+        };
+
+        // Set read permissions for the generated SAS token
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        // Create a BlobServiceClient using the connection string
+        var blobServiceClient = new BlobServiceClient(_blobStorageSettings.ConnectionString);
+
+        // Generate the SAS token using storage account credentials
+        var sasToken = sasBuilder.ToSasQueryParameters(
+            new Azure.Storage.StorageSharedKeyCredential(
+                blobServiceClient.AccountName,
+                _blobStorageSettings.AccountKey
+            )).ToString();
+
+        // Append the SAS token to the blob URL and return it
+        return $"{blobUrl}?{sasToken}";
+    }
+
+
+    private string GetBlobNameFromBlobUrl(string blobUrl)
+    {
+        var uri = new Uri(blobUrl);
+        return uri.Segments.Last();
     }
 }

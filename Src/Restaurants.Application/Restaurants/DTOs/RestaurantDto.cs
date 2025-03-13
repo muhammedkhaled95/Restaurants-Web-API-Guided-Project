@@ -15,6 +15,7 @@ namespace Restaurants.Application.Restaurants.DTOs
         public string? PostalCode { get; set; }
         public List<DishDto> dishes { get; set; } = [];
 
+        public string? LogoSASUrl { get; set; } = default!;
         public static RestaurantDto? MapEntityToDto(Restaurant? restaurant)
         {
             if (restaurant == null) return null;

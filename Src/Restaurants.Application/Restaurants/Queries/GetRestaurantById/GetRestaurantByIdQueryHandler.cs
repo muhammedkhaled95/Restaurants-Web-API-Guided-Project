@@ -5,6 +5,7 @@ using Restaurants.Application.Restaurants.DTOs;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Exceptions;
+using Restaurants.Domain.Interfaces;
 using Restaurants.Domain.Repositories;
 
 namespace Restaurants.Application.Restaurants.Queries.GetRestaurantById;
@@ -14,12 +15,16 @@ public class GetRestaurantByIdQueryHandler : IRequestHandler<GetRestaurantByIdQu
     private readonly ILogger<GetRestaurantByIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IRestaurantsRepository _restaurantsRepository;
+    private readonly IBlobStorageService _blobStorageService;
 
-    public GetRestaurantByIdQueryHandler(IRestaurantsRepository restaurantsRepository, ILogger<GetRestaurantByIdQueryHandler> logger, IMapper mapper)
+    public GetRestaurantByIdQueryHandler(IRestaurantsRepository restaurantsRepository,
+                                         ILogger<GetRestaurantByIdQueryHandler> logger, IMapper mapper,
+                                         IBlobStorageService blobStorageService)
     {
         _logger = logger;
         _mapper = mapper;
         _restaurantsRepository = restaurantsRepository;
+        _blobStorageService = blobStorageService;
         
     }
 
@@ -35,6 +40,8 @@ public class GetRestaurantByIdQueryHandler : IRequestHandler<GetRestaurantByIdQu
 
         // Auto mapping the returned restaurant entity to a Dto to be returned to the controller.
         var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
+
+        restaurantDto.LogoSASUrl = _blobStorageService.GetBlobSASUrl(restaurant.LogoUrl);
 
         return restaurantDto;
     }
