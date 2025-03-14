@@ -94,7 +94,7 @@ public static class WebApplicationBuilderExtensions
         // - Using controllers without AddControllers() and endpoints don’t show up.
         // - Adding custom OpenAPI configurations that require manual registration.
         //
-        // builder.Services.AddEndpointsApiExplorer(); // Uncomment if endpoints stop appearing in Swagger
+        builder.Services.AddEndpointsApiExplorer(); // Uncomment if endpoints stop appearing in Swagger
 
 
         // Registering the error handling middleware as a dependency.
