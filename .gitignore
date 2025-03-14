@@ -401,3 +401,6 @@ FodyWeavers.xsd
 
 # Ignore Migrations folder in Restaurants.Infrastructure
 Restaurants.Infrastructure/Migrations/
+
+# Ignore appsettings for local development. Any keys needed will be set on the cloud platform env variables when needed.
+appsettings.Development.json
